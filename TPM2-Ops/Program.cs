@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using Tpm2Lib;
 
@@ -8,6 +9,10 @@ namespace TPM2_Ops
     {
         static void Main(string[] args)
         {
+            if (!(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux)))
+            {
+                throw new PlatformNotSupportedException();
+            }
             string challenge = "";
             string userKeyauth = "";
             string op = "";
@@ -23,7 +28,7 @@ namespace TPM2_Ops
 
             if (op.Length != 0) 
             {
-                Tpm2Device tpmDevice = new TbsDevice();
+                Tpm2Device tpmDevice = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? new TbsDevice() : new LinuxTpmDevice();
                 tpmDevice.Connect();
                 var tpm = new Tpm2(tpmDevice);
 
