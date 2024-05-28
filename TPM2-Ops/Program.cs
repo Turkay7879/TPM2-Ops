@@ -71,7 +71,7 @@ namespace TPM2_Ops
                     }
                 } else if (op == "SIGN")
                 {
-                    byte[] message = Encoding.Unicode.GetBytes(challenge);
+                    byte[] message = Encoding.UTF8.GetBytes(challenge);
                     TpmHash digestToSign = TpmHash.FromData(TpmAlgId.Sha256, message);
 
                     var signature = tpm[keyAuth].Sign(
